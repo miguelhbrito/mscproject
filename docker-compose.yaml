@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  postgresdb:
+    image: postgres:latest
+    container_name: postgresdb_container
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=asgard
+      - POSTGRES_USER=hel
+      - POSTGRES_PASSWORD=saymyname
+      - MAX_CONNECTIONS=300
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+      - /logs/
+    networks:
+      - local-network
+    restart: on-failure
+  mytor:
+    image: dperson/torproxy
+    container_name: mytor
+    ports:
+      - "9050:9050"
+      - "8118:8118"
+    environment:
+      - TORUSER=root
+    networks:
+      - local-network
+    restart: on-failure
+  api-msc:
+    image: docker-mscproject:latest
+    container_name: api-msc
+    ports:
+      - "5000:5000"
+    networks:
+      - local-network
+    depends_on:
+      - postgresdb
+      - mytor
+    restart: on-failure
+volumes:
+    pgdata:
+networks:
+  local-network:
+    driver: bridge
