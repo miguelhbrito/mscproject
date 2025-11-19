@@ -3,7 +3,6 @@ package deepenus
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"reflect"
@@ -296,7 +295,7 @@ func (cS core) CreateJSON() error {
 	file, _ := json.MarshalIndent(questionsPtbr, "", " ")
 
 	t := time.Now()
-	_ = ioutil.WriteFile(pwd+"/"+
+	_ = os.WriteFile(pwd+"/"+
 		t.Format(commons.YYYYMMDDhhmmss)+
 		"-DeepAnswersEnUS.json", file, 0644)
 
